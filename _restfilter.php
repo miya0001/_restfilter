@@ -9,6 +9,7 @@
  **/
 
 namespace _restfilter;
+use Miya\WP\GH_Auto_Updater;
 
  // Autoload
 require_once( dirname( __FILE__ ) . '/vendor/autoload.php' );
@@ -21,7 +22,7 @@ function activate_autoupdate() {
 	$gh_repo = 'gh-auto-updater-example';       // The repository name of your plugin.
 
 	// Activate automatic update.
-	new Miya\WP\GH_Auto_Updater( $plugin_slug, $gh_user, $gh_repo );
+	new GH_Auto_Updater( $plugin_slug, $gh_user, $gh_repo );
 }
 
 add_action( 'rest_api_init', '_restfilter\rest_api_filter_add_filters' );
