@@ -8,14 +8,30 @@
  * License: GPL2+
  **/
 
-add_action( 'rest_api_init', 'rest_api_filter_add_filters' );
+namespace _restfilter;
+
+ // Autoload
+require_once( dirname( __FILE__ ) . '/vendor/autoload.php' );
+
+add_action( 'init', '_restfilter\activate_autoupdate' );
+
+function activate_autoupdate() {
+	$plugin_slug = plugin_basename( __FILE__ ); // e.g. `hello/hello.php`.
+	$gh_user = 'miya0001';                      // The user name of GitHub.
+	$gh_repo = 'gh-auto-updater-example';       // The repository name of your plugin.
+
+	// Activate automatic update.
+	new Miya\WP\GH_Auto_Updater( $plugin_slug, $gh_user, $gh_repo );
+}
+
+add_action( 'rest_api_init', '_restfilter\rest_api_filter_add_filters' );
 
  /**
   * Add the necessary filter to each post type
   **/
 function rest_api_filter_add_filters() {
 	foreach ( get_post_types( array( 'show_in_rest' => true ), 'objects' ) as $post_type ) {
-		add_filter( 'rest_' . $post_type->name . '_query', 'rest_api_filter_add_filter_param', 10, 2 );
+		add_filter( 'rest_' . $post_type->name . '_query', '_restfilter\rest_api_filter_add_filter_param', 10, 2 );
 	}
 }
 
@@ -47,7 +63,7 @@ function rest_api_filter_add_filter_param( $args, $request ) {
 	    return $valid_vars;
 	}
 	$vars = allow_meta_query( $vars );
-	
+
 	foreach ( $vars as $var ) {
 		if ( isset( $filter[ $var ] ) ) {
 			$args[ $var ] = $filter[ $var ];

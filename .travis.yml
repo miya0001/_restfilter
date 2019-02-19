@@ -1,0 +1,33 @@
+sudo: false
+language: php
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+branches:
+  only:
+  - master
+  - "/^v?[0-9\\.]+/"
+cache:
+- composer
+- "$HOME/.composer/cache"
+php:
+- 7.0
+- 7.2
+env:
+- WP_VERSION=nightly WP_MULTISITE=0
+script:
+- ls -al
+after_success:
+- sed -i -e "s/nightly/${TRAVIS_TAG}/" $(basename $TRAVIS_REPO_SLUG).php
+- curl https://raw.githubusercontent.com/miya0001/auto-build/master/auto-build.sh
+  | bash
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: KPKpU/ZRsxmFgeaPfWjQZuKDbleZgbJmBMsyEUogfRUynEmFaJRNha7l9LVGTI1YM0AzSKU2JyyPYleKSD6lF80NGpeMytbl54A9jpQbIcg8ZBf0udFjmq0UENsUkLgsEz4fHNo6mELsTX7VO3bOgM6zEfvXA4q8AwQC2spCk0MYEByE+vxbiIjNqTlPzCrXJCqAOdEIEcRlgsHY9xzBIoquQgKusEpIoHnU8QeGhMNz/Nk5+LJdZEG9rTxJfMfXVJlPhG+jA/irzT5jQcnJScO5MYWKsSaRLem+BjCCUeXi8N7sSayvo46auXQojYIMMWZje8ubHmkvCLJfMZiQu6gvYl6mGRmdSOeHiqkz7EZWGK2/OsLR6Yf/nPCyY6zRv43re2y5q7EVVFUFaZvJuRUOpF1cOpBi0GF1lnubAJcWryXOixZtznAHE//EjjU69587OjltiypkBe5cvGaybGFPuHtNj2406Bp61yoE81/yFTTath2EOAMCTkMopp/qf7TkPljfZAxtFQHyexPC9msxsn+5iyZsTye+n+jRQDXbVGs970zm1KLZsOgT1loYGQAk2fhWUAXDnN+MO/CtOA1ZFQHXMMwy/ghWQqk1//mD8IsoMFC/SleyB8B/v5nXkgretKBXKx1z4wHP0Pt5NUjkMRlsnA149PtFBIZi/YY=
+  file: _restfilter.zip
+  on:
+    tags: true
+    repo: miya0001/_restfilter
