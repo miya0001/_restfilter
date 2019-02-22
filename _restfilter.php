@@ -19,7 +19,7 @@ add_action( 'init', '_restfilter\activate_autoupdate' );
 function activate_autoupdate() {
 	$plugin_slug = plugin_basename( __FILE__ ); // e.g. `hello/hello.php`.
 	$gh_user = 'miya0001';                      // The user name of GitHub.
-	$gh_repo = 'gh-auto-updater-example';       // The repository name of your plugin.
+	$gh_repo = '_restfilter';       // The repository name of your plugin.
 
 	// Activate automatic update.
 	new GH_Auto_Updater( $plugin_slug, $gh_user, $gh_repo );
